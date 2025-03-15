@@ -98,7 +98,61 @@ public sealed unsafe class Plugin : IDalamudPlugin
         // in response to the slash command, just toggle the display status of our main ui
         ToggleMainUI();
     }
- 
+
+    private void OnOpenMenu(IMenuOpenedArgs args)
+    {
+        // Store local copy of White list for ez access and speed
+        var AllowedContentIds = Configuration.WhiteListIDs;
+
+        // ???
+        PluginHandlers.PluginLog.Info($"AddonName: {args.AddonName}");
+        if (args.AddonName != null) return;
+
+        // Filter for only players when right clicking on entities
+        IGameObject? target = PluginHandlers.TargetManager.Target;
+        if (target is not IPlayerCharacter pCharacter) return;
+
+        // Locate entity data directly in memory, this is going underneath dalamud now, the name
+        // is because this can be more than just players but we've already filtered down to player anywho
+        BattleChara* bChara = (BattleChara*)pCharacter.Address;
+        if (bChara == null) return;
+
+        // Grab player characters unique ID
+        ulong characterContentId = bChara->ContentId;
+
+        // Check against existing id's, display different context based on this condition
+        if (AllowedContentIds.Contains(characterContentId))
+        {
+            // add an item to the player context menu
+            args.AddMenuItem(new MenuItem()
+            {
+                Name = "Remove Player from Whitelist",
+                Prefix = SeIconChar.BoxedLetterK,
+                PrefixColor = 0,
+                OnClicked = (_) =>
+                {
+                    Configuration.WhiteListIDs.Remove(characterContentId);
+                    Configuration.Save();
+                }
+            });
+        }
+        else
+        {
+            // add an item to the player context menu
+            args.AddMenuItem(new MenuItem()
+            {
+                Name = "Add Player To Whitelist",
+                Prefix = SeIconChar.BoxedLetterK,
+                PrefixColor = 0,
+                OnClicked = (_) =>
+                {
+                    Configuration.WhiteListIDs.Add(characterContentId);
+                    Configuration.Save();
+                }
+            });
+        }
+    }
+
     private void DrawUI() => WindowSystem.Draw();
 
     public void ToggleConfigUI() => ConfigWindow.Toggle();
