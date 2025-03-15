@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Numerics;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
@@ -42,6 +42,11 @@ public class MainWindow : Window, IDisposable
         if (ImGui.Button("Show Settings"))
         {
             Plugin.ToggleConfigUI();
+        }
+
+        if (ImGui.Button("Show your KnockList"))
+        {
+            Plugin.ToggleKnockListUI();
         }
 
         ImGui.Spacing();

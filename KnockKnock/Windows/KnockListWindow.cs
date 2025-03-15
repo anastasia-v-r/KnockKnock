@@ -1,23 +1,28 @@
 using System;
+using System.Linq;
 using System.Numerics;
 using Dalamud.Interface.Windowing;
+using FFXIVClientStructs.FFXIV.Common.Lua;
 using ImGuiNET;
 
 namespace SamplePlugin.Windows;
 
-public class ConfigWindow : Window, IDisposable
+public class KnockListWindow : Window, IDisposable
 {
     private Configuration Configuration;
+
+    private Int32 UserListCurrentIndex = 0;
+    private byte[] NewPlayerString = new byte[20];
 
     // We give this window a constant ID using ###
     // This allows for labels being dynamic, like "{FPS Counter}fps###XYZ counter window",
     // and the window ID will always be "###XYZ counter window" for ImGui
-    public ConfigWindow(Plugin plugin) : base("KnockKnock Settings")
+    public KnockListWindow(Plugin plugin) : base("KnockKnock Player Whitelist")
     {
         Flags = ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoScrollbar |
                 ImGuiWindowFlags.NoScrollWithMouse;
 
-        Size = new Vector2(232, 180);
+        Size = new Vector2(500, 600);
         SizeCondition = ImGuiCond.Always;
 
         Configuration = plugin.Configuration;
@@ -38,28 +43,31 @@ public class ConfigWindow : Window, IDisposable
         }
     }
 
+   
+
     public override void Draw()
     {
-        var UseWhiteList = Configuration.UseWhitelist;
-        if (ImGui.Checkbox("Use whitelist", ref UseWhiteList))
+        // Display current list of players on whitelist
+        var UserList = Configuration.WhiteList;
+        if (UserList.Count > 0)
         {
-            Configuration.UseWhitelist = UseWhiteList;
-            Configuration.Save();
-        }
-        // can't ref a property, so use a local copy
-        var configValue = Configuration.SomePropertyToBeSavedAndWithADefault;
-        if (ImGui.Checkbox("Random Config Bool", ref configValue))
-        {
-            Configuration.SomePropertyToBeSavedAndWithADefault = configValue;
-            // can save immediately on change, if you don't want to provide a "Save and Close" button
-            Configuration.Save();
+            if (ImGui.ListBox("Player Names", ref UserListCurrentIndex, UserList.ToArray(), UserList.Count))
+            {
+
+            }
         }
 
-        var movable = Configuration.IsConfigWindowMovable;
-        if (ImGui.Checkbox("Movable Config Window", ref movable))
+        // Allow user to add a name manually
+        if (ImGui.Button("##"))
         {
-            Configuration.IsConfigWindowMovable = movable;
+            UserList.Add(System.Text.Encoding.UTF8.GetString(NewPlayerString, 0, NewPlayerString.Length));
+            Configuration.WhiteList = UserList;
             Configuration.Save();
+        }
+        ImGui.SameLine();
+        if (ImGui.InputText("bingus", NewPlayerString, (uint)NewPlayerString.Length))
+        {
+
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.Command;
+using Dalamud.Game.Command;
 using Dalamud.IoC;
 using Dalamud.Plugin;
 using System.IO;
@@ -6,7 +6,7 @@ using Dalamud.Interface.Windowing;
 using Dalamud.Plugin.Services;
 using SamplePlugin.Windows;
 
-namespace KnockKnock;
+namespace SamplePlugin;
 
 public sealed class Plugin : IDalamudPlugin
 {
@@ -17,11 +17,16 @@ public sealed class Plugin : IDalamudPlugin
     [PluginService] internal static IDataManager DataManager { get; private set; } = null!;
     [PluginService] internal static IPluginLog Log { get; private set; } = null!;
 
-    private const string CommandName = "/pmycommand";
+    private const string CommandName = "/knockknock";
+#if DEBUG
+    private const string DevCommandName = "/kkd";
+#endif
 
     public Configuration Configuration { get; init; }
 
     public readonly WindowSystem WindowSystem = new("SamplePlugin");
+
+    private KnockListWindow KnockListWindow { get; init; }
     private ConfigWindow ConfigWindow { get; init; }
     private MainWindow MainWindow { get; init; }
 
@@ -32,13 +37,21 @@ public sealed class Plugin : IDalamudPlugin
         // you might normally want to embed resources and load them from the manifest stream
         var goatImagePath = Path.Combine(PluginInterface.AssemblyLocation.Directory?.FullName!, "goat.png");
 
+        KnockListWindow = new KnockListWindow(this);
         ConfigWindow = new ConfigWindow(this);
         MainWindow = new MainWindow(this, goatImagePath);
 
+        WindowSystem.AddWindow(KnockListWindow);
         WindowSystem.AddWindow(ConfigWindow);
         WindowSystem.AddWindow(MainWindow);
 
         CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
+        {
+            HelpMessage = "A useful message to display in /xlhelp"
+        });
+
+#if DEBUG
+        CommandManager.AddHandler(DevCommandName, new CommandInfo(OnCommand)
         {
             HelpMessage = "A useful message to display in /xlhelp"
         });
@@ -57,11 +70,13 @@ public sealed class Plugin : IDalamudPlugin
         // Example Output: 00:57:54.959 | INF | [SamplePlugin] ===A cool log message from Sample Plugin===
         Log.Information($"===A cool log message from {PluginInterface.Manifest.Name}===");
     }
+#endif
 
     public void Dispose()
     {
         WindowSystem.RemoveAllWindows();
 
+        KnockListWindow.Dispose();
         ConfigWindow.Dispose();
         MainWindow.Dispose();
 
@@ -78,4 +93,5 @@ public sealed class Plugin : IDalamudPlugin
 
     public void ToggleConfigUI() => ConfigWindow.Toggle();
     public void ToggleMainUI() => MainWindow.Toggle();
+    public void ToggleKnockListUI() => KnockListWindow.Toggle();
 }
