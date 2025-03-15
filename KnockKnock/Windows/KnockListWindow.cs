@@ -12,7 +12,6 @@ public class KnockListWindow : Window, IDisposable
     private Configuration Configuration;
 
     private Int32 UserListCurrentIndex = 0;
-    private byte[] NewPlayerString = new byte[20];
 
     // We give this window a constant ID using ###
     // This allows for labels being dynamic, like "{FPS Counter}fps###XYZ counter window",
@@ -49,7 +48,7 @@ public class KnockListWindow : Window, IDisposable
     {
 
         // Display current list of players on whitelist
-        var UserList = Configuration.WhiteList;
+        var UserList = Configuration.WhiteListIDs;
         if (UserList.Count > 0)
         {
             for (int i = 0; i < UserList.Count; i++)
@@ -57,28 +56,14 @@ public class KnockListWindow : Window, IDisposable
                 if(ImGui.ArrowButton($"##RemoveNameButton {i}", ImGuiDir.Left))
                 {
                     UserList.RemoveAt(i);
-                    Configuration.WhiteList = UserList;
+                    Configuration.WhiteListIDs = UserList;
                     Configuration.Save();
                 }
                 ImGui.SameLine();
                 ImGui.PushItemWidth(20);
-                ImGui.Text(UserList[i]);
+                ImGui.Text(UserList[i].ToString());
                 ImGui.PopItemWidth();
             }
-        }
-
-        // Allow user to add a name manually
-        if (ImGui.Button("##AddNameButton"))
-        {
-            UserList.Add(System.Text.Encoding.UTF8.GetString(NewPlayerString, 0, NewPlayerString.Length));
-            Configuration.WhiteList = UserList;
-            Configuration.Save();
-            NewPlayerString = new byte[20];
-        }
-        ImGui.SameLine();
-        if (ImGui.InputText("bingus", NewPlayerString, (uint)NewPlayerString.Length))
-        {
-            
         }
     }
 }

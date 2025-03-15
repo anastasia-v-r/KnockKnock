@@ -1,5 +1,6 @@
 using Dalamud.Configuration;
 using Dalamud.Plugin;
+using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using System;
 using System.Collections.Generic;
 
@@ -13,7 +14,7 @@ public class Configuration : IPluginConfiguration
     public bool UseWhitelist { get; set; } = true;
     public bool IsConfigWindowMovable { get; set; } = true;
 
-    public List<string> WhiteList = new List<string>();
+    public List<ulong> WhiteListIDs = new List<ulong>();
     // the below exist just to make saving less cumbersome
     public void Save()
     {
