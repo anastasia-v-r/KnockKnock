@@ -19,7 +19,7 @@ public class KnockListWindow : Window, IDisposable
     // and the window ID will always be "###XYZ counter window" for ImGui
     public KnockListWindow(Plugin plugin) : base("KnockKnock Player Whitelist")
     {
-        Flags = ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoScrollbar |
+        Flags = ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollbar |
                 ImGuiWindowFlags.NoScrollWithMouse;
 
         Size = new Vector2(500, 600);
@@ -47,27 +47,38 @@ public class KnockListWindow : Window, IDisposable
 
     public override void Draw()
     {
+
         // Display current list of players on whitelist
         var UserList = Configuration.WhiteList;
         if (UserList.Count > 0)
         {
-            if (ImGui.ListBox("Player Names", ref UserListCurrentIndex, UserList.ToArray(), UserList.Count))
+            for (int i = 0; i < UserList.Count; i++)
             {
-
+                if(ImGui.ArrowButton($"##RemoveNameButton {i}", ImGuiDir.Left))
+                {
+                    UserList.RemoveAt(i);
+                    Configuration.WhiteList = UserList;
+                    Configuration.Save();
+                }
+                ImGui.SameLine();
+                ImGui.PushItemWidth(20);
+                ImGui.Text(UserList[i]);
+                ImGui.PopItemWidth();
             }
         }
 
         // Allow user to add a name manually
-        if (ImGui.Button("##"))
+        if (ImGui.Button("##AddNameButton"))
         {
             UserList.Add(System.Text.Encoding.UTF8.GetString(NewPlayerString, 0, NewPlayerString.Length));
             Configuration.WhiteList = UserList;
             Configuration.Save();
+            NewPlayerString = new byte[20];
         }
         ImGui.SameLine();
         if (ImGui.InputText("bingus", NewPlayerString, (uint)NewPlayerString.Length))
         {
-
+            
         }
     }
 }
