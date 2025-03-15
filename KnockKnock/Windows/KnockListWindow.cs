@@ -64,6 +64,18 @@ public class KnockListWindow : Window, IDisposable
                 ImGui.PushItemWidth(20);
                 ImGui.Text(player.Value.Name);
                 ImGui.PopItemWidth();
+                ImGui.SameLine();
+                ImGui.PushItemWidth(20);
+                ImGui.Text(player.Value.HomeWorld.ToString());
+                ImGui.PopItemWidth();
+                ImGui.SameLine();
+                ImGui.BeginDisabled();
+                var isFriend = player.Value.IsPlayerFriend;
+                if (ImGui.Checkbox("##isfriend", ref isFriend))
+                {
+                    
+                }
+                ImGui.EndDisabled();
             }
         }
     }
