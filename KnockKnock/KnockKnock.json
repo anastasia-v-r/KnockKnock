@@ -1,8 +1,9 @@
 {
-  "Author": "your name here",
-  "Name": "Sample Plugin",
-  "Punchline": "A short one-liner that shows up in /xlplugins.",
+  "Author": "Anastasia",
+  "Name": "KnockKnock",
+  "Punchline": "Tired of having to manually unlock your housing? Worry no more!",
   "Description": "A description that shows up in /xlplugins. List any major slash-command(s).",
+  "InternalName": "KnockKnock",
   "ApplicableVersion": "any",
   "Tags": [
     "sample",

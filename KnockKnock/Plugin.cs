@@ -6,7 +6,7 @@ using Dalamud.Interface.Windowing;
 using Dalamud.Plugin.Services;
 using SamplePlugin.Windows;
 
-namespace SamplePlugin;
+namespace KnockKnock;
 
 public sealed class Plugin : IDalamudPlugin
 {
