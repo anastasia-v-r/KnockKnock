@@ -5,10 +5,16 @@ using System.IO;
 using Dalamud.Interface.Windowing;
 using Dalamud.Plugin.Services;
 using SamplePlugin.Windows;
+using KnockKnock;
+using Dalamud.Game.Gui.ContextMenu;
+using Dalamud.Game.ClientState.Objects.SubKinds;
+using Dalamud.Game.ClientState.Objects.Types;
+using Dalamud.Game.Text;
+using FFXIVClientStructs.FFXIV.Client.Game.Character;
 
 namespace SamplePlugin;
 
-public sealed class Plugin : IDalamudPlugin
+public sealed unsafe class Plugin : IDalamudPlugin
 {
     [PluginService] internal static IDalamudPluginInterface PluginInterface { get; private set; } = null!;
     [PluginService] internal static ITextureProvider TextureProvider { get; private set; } = null!;
@@ -30,8 +36,12 @@ public sealed class Plugin : IDalamudPlugin
     private ConfigWindow ConfigWindow { get; init; }
     private MainWindow MainWindow { get; init; }
 
-    public Plugin()
+    public Plugin(IDalamudPluginInterface dalamud)
     {
+        // Dalamad Services section
+        PluginHandlers.Start(dalamud);
+        PluginHandlers.ContextMenu.OnMenuOpened += OnOpenMenu;
+
         Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
 
         // you might normally want to embed resources and load them from the manifest stream
@@ -88,7 +98,7 @@ public sealed class Plugin : IDalamudPlugin
         // in response to the slash command, just toggle the display status of our main ui
         ToggleMainUI();
     }
-
+ 
     private void DrawUI() => WindowSystem.Draw();
 
     public void ToggleConfigUI() => ConfigWindow.Toggle();
