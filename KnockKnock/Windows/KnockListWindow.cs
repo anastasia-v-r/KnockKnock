@@ -48,20 +48,21 @@ public class KnockListWindow : Window, IDisposable
     {
 
         // Display current list of players on whitelist
-        var UserList = Configuration.WhiteListIDs;
+        var UserList = Configuration.StoredPlayers;
         if (UserList.Count > 0)
         {
-            for (int i = 0; i < UserList.Count; i++)
+            foreach (var player in UserList)
             {
-                if(ImGui.ArrowButton($"##RemoveNameButton {i}", ImGuiDir.Left))
+                if(ImGui.ArrowButton($"##RemoveNameButton {player.Key}", ImGuiDir.Left))
                 {
-                    UserList.RemoveAt(i);
-                    Configuration.WhiteListIDs = UserList;
+                    UserList.Remove(player.Key);
+                    Configuration.StoredPlayers = UserList;
                     Configuration.Save();
+                    break;
                 }
                 ImGui.SameLine();
                 ImGui.PushItemWidth(20);
-                ImGui.Text(UserList[i].ToString());
+                ImGui.Text(player.Value.Name);
                 ImGui.PopItemWidth();
             }
         }

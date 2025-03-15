@@ -11,6 +11,9 @@ using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.Text;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
+using System.Collections.Generic;
+using FFXIVClientStructs.FFXIV.Common.Lua;
+using System.Linq;
 
 namespace SamplePlugin;
 
@@ -102,7 +105,7 @@ public sealed unsafe class Plugin : IDalamudPlugin
     private void OnOpenMenu(IMenuOpenedArgs args)
     {
         // Store local copy of White list for ez access and speed
-        var AllowedContentIds = Configuration.WhiteListIDs;
+        var AllowedContentIds = Configuration.StoredPlayers.Keys.ToList();
 
         // ???
         PluginHandlers.PluginLog.Info($"AddonName: {args.AddonName}");
@@ -131,7 +134,7 @@ public sealed unsafe class Plugin : IDalamudPlugin
                 PrefixColor = 0,
                 OnClicked = (_) =>
                 {
-                    Configuration.WhiteListIDs.Remove(characterContentId);
+                    Configuration.StoredPlayers.Remove(characterContentId);
                     Configuration.Save();
                 }
             });
@@ -146,7 +149,8 @@ public sealed unsafe class Plugin : IDalamudPlugin
                 PrefixColor = 0,
                 OnClicked = (_) =>
                 {
-                    Configuration.WhiteListIDs.Add(characterContentId);
+                    Configuration.StoredPlayers.Add(characterContentId, 
+                        new PlayerDataStorageContainer(bChara->NameString, bChara->HomeWorld, bChara->IsFriend));
                     Configuration.Save();
                 }
             });

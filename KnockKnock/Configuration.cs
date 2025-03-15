@@ -6,6 +6,34 @@ using System.Collections.Generic;
 
 namespace SamplePlugin;
 
+[Serializable] 
+public class PlayerDataStorageContainer
+{
+    private string playerName;
+    private ushort playerHomeWorld;
+    private bool isPlayerFriend;
+    public PlayerDataStorageContainer(string playerName, ushort playerHomeWorld, bool isFriend)
+    { 
+        this.playerName = playerName;
+        this.playerHomeWorld = playerHomeWorld;
+        this.isPlayerFriend = isFriend;
+    }
+    public string Name
+    {
+        get { return playerName; }
+        set { playerName = value; }
+    }
+    public ushort HomeWorld
+    { 
+        get { return playerHomeWorld; } 
+        set { playerHomeWorld = value; } 
+    }
+    public bool IsPlayerFriend
+    {
+        get { return isPlayerFriend; }
+        set { isPlayerFriend = value; }
+    }
+}
 [Serializable]
 public class Configuration : IPluginConfiguration
 {
@@ -14,7 +42,7 @@ public class Configuration : IPluginConfiguration
     public bool UseWhitelist { get; set; } = true;
     public bool IsConfigWindowMovable { get; set; } = true;
 
-    public List<ulong> WhiteListIDs = new List<ulong>();
+    public Dictionary<ulong, PlayerDataStorageContainer> StoredPlayers = new Dictionary<ulong, PlayerDataStorageContainer>();
     // the below exist just to make saving less cumbersome
     public void Save()
     {
