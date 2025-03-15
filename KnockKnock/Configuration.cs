@@ -12,7 +12,6 @@ public class Configuration : IPluginConfiguration
 
     public bool UseWhitelist { get; set; } = true;
     public bool IsConfigWindowMovable { get; set; } = true;
-    public bool SomePropertyToBeSavedAndWithADefault { get; set; } = true;
 
     public List<string> WhiteList = new List<string>();
     // the below exist just to make saving less cumbersome
