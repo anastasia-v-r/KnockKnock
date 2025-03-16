@@ -14,6 +14,7 @@ using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using System.Collections.Generic;
 using FFXIVClientStructs.FFXIV.Common.Lua;
 using System.Linq;
+using KnockKnock.Tabs;
 
 namespace SamplePlugin;
 
@@ -33,8 +34,6 @@ public sealed unsafe class Plugin : IDalamudPlugin
 
     public readonly WindowSystem WindowSystem = new("SamplePlugin");
 
-    private KnockListWindow KnockListWindow { get; init; }
-    private ConfigWindow ConfigWindow { get; init; }
     private MainWindow MainWindow { get; init; }
 
     public Plugin(IDalamudPluginInterface dalamud)
@@ -48,12 +47,8 @@ public sealed unsafe class Plugin : IDalamudPlugin
         // you might normally want to embed resources and load them from the manifest stream
         var goatImagePath = Path.Combine(PluginInterface.AssemblyLocation.Directory?.FullName!, "goat.png");
 
-        KnockListWindow = new KnockListWindow(this);
-        ConfigWindow = new ConfigWindow(this);
         MainWindow = new MainWindow(this, goatImagePath);
 
-        WindowSystem.AddWindow(KnockListWindow);
-        WindowSystem.AddWindow(ConfigWindow);
         WindowSystem.AddWindow(MainWindow);
 
         CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
@@ -69,10 +64,6 @@ public sealed unsafe class Plugin : IDalamudPlugin
 #endif
         PluginInterface.UiBuilder.Draw += DrawUI;
 
-        // This adds a button to the plugin installer entry of this plugin which allows
-        // to toggle the display status of the configuration ui
-        PluginInterface.UiBuilder.OpenConfigUi += ToggleConfigUI;
-
         // Adds another button that is doing the same but for the main ui of the plugin
         PluginInterface.UiBuilder.OpenMainUi += ToggleMainUI;
 
@@ -87,8 +78,6 @@ public sealed unsafe class Plugin : IDalamudPlugin
     {
         WindowSystem.RemoveAllWindows();
 
-        KnockListWindow.Dispose();
-        ConfigWindow.Dispose();
         MainWindow.Dispose();
 
         CommandManager.RemoveHandler(CommandName);
@@ -157,7 +146,5 @@ public sealed unsafe class Plugin : IDalamudPlugin
 
     private void DrawUI() => WindowSystem.Draw();
 
-    public void ToggleConfigUI() => ConfigWindow.Toggle();
     public void ToggleMainUI() => MainWindow.Toggle();
-    public void ToggleKnockListUI() => KnockListWindow.Toggle();
 }
