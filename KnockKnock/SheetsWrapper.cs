@@ -11,18 +11,15 @@ namespace KnockKnock;
 
 public static class SheetsWrapper
 {
-    private static ExcelSheet<World>? worldSheet = DalamudServices.DataManager.GetExcelSheet<World>();
+    private static ExcelSheet<World>? worldSheet = DalamudServices.DataManager.GetExcelSheet<World>()!;
 
-    public static string? GetWorldFromId(int id)
+    public static string? GetWorldFromId(uint worldId)
     {
-        if (worldSheet == null) return null;
-        foreach (World world in worldSheet)
+        if (worldSheet.TryGetRow(worldId, out var world))
         {
-            if (world.RowId == id)
-            {
-                return world.Name.ExtractText();
-            }
+            return world.Name.ExtractText();
         }
-        return null;
+
+        return "A Foreign Land";
     }
 }
