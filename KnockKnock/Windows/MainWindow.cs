@@ -62,33 +62,5 @@ public class MainWindow : Window, IDisposable
             }
             ImGui.EndTabBar();
         }
-
-        ImGui.Spacing();
-
-        // Normally a BeginChild() would have to be followed by an unconditional EndChild(),
-        // ImRaii takes care of this after the scope ends.
-        // This works for all ImGui functions that require specific handling, examples are BeginTable() or Indent().
-        using (var child = ImRaii.Child("SomeChildWithAScrollbar", Vector2.Zero, true))
-        {
-            // Check if this child is drawing
-            if (child.Success)
-            {
-                ImGui.TextUnformatted("Have a goat:");
-                var goatImage = Plugin.TextureProvider.GetFromFile(GoatImagePath).GetWrapOrDefault();
-                if (goatImage != null)
-                {
-                    using (ImRaii.PushIndent(55f))
-                    {
-                        ImGui.Image(goatImage.ImGuiHandle, new Vector2(goatImage.Width, goatImage.Height));
-                    }
-                }
-                else
-                {
-                    ImGui.TextUnformatted("Image not found.");
-                }
-
-                ImGuiHelpers.ScaledDummy(20.0f);
-            }
-        }
     }
 }
