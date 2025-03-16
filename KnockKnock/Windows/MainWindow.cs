@@ -70,37 +70,6 @@ public class MainWindow : Window, IDisposable
                 }
 
                 ImGuiHelpers.ScaledDummy(20.0f);
-
-                // Example for other services that Dalamud provides.
-                // ClientState provides a wrapper filled with information about the local player object and client.
-
-                var localPlayer = Plugin.ClientState.LocalPlayer;
-                if (localPlayer == null)
-                {
-                    ImGui.TextUnformatted("Our local player is currently not loaded.");
-                    return;
-                }
-
-                if (!localPlayer.ClassJob.IsValid)
-                {
-                    ImGui.TextUnformatted("Our current job is currently not valid.");
-                    return;
-                }
-
-                // ExtractText() should be the preferred method to read Lumina SeStrings,
-                // as ToString does not provide the actual text values, instead gives an encoded macro string.
-                ImGui.TextUnformatted($"Our current job is ({localPlayer.ClassJob.RowId}) \"{localPlayer.ClassJob.Value.Abbreviation.ExtractText()}\"");
-
-                // Example for quarrying Lumina directly, getting the name of our current area.
-                var territoryId = Plugin.ClientState.TerritoryType;
-                if (DalamudServices.DataManager.GetExcelSheet<TerritoryType>().TryGetRow(territoryId, out var territoryRow))
-                {
-                    ImGui.TextUnformatted($"We are currently in ({territoryId}) \"{territoryRow.PlaceName.Value.Name.ExtractText()}\"");
-                }
-                else
-                {
-                    ImGui.TextUnformatted("Invalid territory.");
-                }
             }
         }
     }
