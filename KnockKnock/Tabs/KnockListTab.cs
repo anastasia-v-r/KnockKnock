@@ -8,6 +8,8 @@ using SamplePlugin;
 
 namespace KnockKnock.Tabs;
 
+
+
 public class KnockListTab : ITab
 {
     private Configuration Configuration;
@@ -23,8 +25,27 @@ public class KnockListTab : ITab
 
     public void Draw()
     {
+        
+
         if (ImGui.BeginTabItem(Name))
         {
+            // Setup headers for play list table
+            if (ImGui.BeginTable("Table", 4, ImGuiTableFlags.Borders))
+            {
+                // Setup headers for table
+                DalamudServices.Log.Debug($"{Misc.TEXT_BASE_WIDTH}");
+                ImGui.TableSetupColumn("Enable", ImGuiTableColumnFlags.WidthFixed, Misc.TEXT_BASE_WIDTH * 5);
+                ImGui.TableSetupColumn("Player Name", ImGuiTableColumnFlags.WidthFixed, Misc.TEXT_BASE_WIDTH * 25);
+                ImGui.TableSetupColumn("Homeworld", ImGuiTableColumnFlags.WidthFixed, Misc.TEXT_BASE_WIDTH * 15);
+                ImGui.TableSetupColumn("Friend?", ImGuiTableColumnFlags.WidthFixed, Misc.TEXT_BASE_WIDTH * 5);
+                //ImGui.PopItemWidth();
+                ImGui.TableHeadersRow();
+
+
+                ImGui.EndTable();
+            }
+            
+
             // Display current list of players on whitelist
             var UserList = Configuration.StoredPlayers;
             if (UserList.Count > 0)
@@ -38,15 +59,18 @@ public class KnockListTab : ITab
                         Configuration.Save();
                         break;
                     }
-                    ImGui.SameLine();
-                    ImGui.PushItemWidth(20);
+
+                    ImGui.SameLine(Misc.TEXT_BASE_WIDTH * 5f);
+                    var isEnabled = true;
+                    if (ImGui.Checkbox("##Enable/Disable Player", ref isEnabled));
+
+                    ImGui.SameLine(Misc.TEXT_BASE_WIDTH * (25f + 5f));
                     ImGui.Text(player.Value.Name);
-                    ImGui.PopItemWidth();
-                    ImGui.SameLine();
-                    ImGui.PushItemWidth(20);
+
+                    ImGui.SameLine(Misc.TEXT_BASE_WIDTH * ((25f + 5f) + 15f));
                     ImGui.Text(player.Value.HomeWorld.ToString());
-                    ImGui.PopItemWidth();
-                    ImGui.SameLine();
+
+                    ImGui.SameLine(Misc.TEXT_BASE_WIDTH * (((25f + 5f) + 15f) + 5f));
                     ImGui.BeginDisabled();
                     var isFriend = player.Value.IsPlayerFriend;
                     if (ImGui.Checkbox("##isfriend", ref isFriend))
