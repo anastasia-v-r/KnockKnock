@@ -9,6 +9,7 @@ using Lumina.Excel.Sheets;
 using KnockKnock;
 using KnockKnock.Tabs;
 using System.Collections.Generic;
+using System.Xml.Linq;
 
 namespace SamplePlugin.Windows;
 
@@ -57,8 +58,9 @@ public class MainWindow : Window, IDisposable
             }
             if(ImGui.BeginTabItem("Housing"))
             {
-
+                ImGui.EndTabItem();
             }
+            ImGui.EndTabBar();
         }
 
         ImGui.Spacing();

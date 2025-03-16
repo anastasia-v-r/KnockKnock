@@ -56,6 +56,7 @@ public class KnockListTab : ITab
                     ImGui.EndDisabled();
                 }
             }
+            ImGui.EndTabItem();
         }
     }
 }

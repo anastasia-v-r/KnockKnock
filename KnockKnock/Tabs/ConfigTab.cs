@@ -37,6 +37,8 @@ public class ConfigTab : ITab
                 Configuration.IsConfigWindowMovable = movable;
                 Configuration.Save();
             }
+            ImGui.EndTabItem();
         }
+        
     }
 }
