@@ -23,8 +23,6 @@ public sealed unsafe class Plugin : IDalamudPlugin
     [PluginService] internal static ITextureProvider TextureProvider { get; private set; } = null!;
     [PluginService] internal static ICommandManager CommandManager { get; private set; } = null!;
     [PluginService] internal static IClientState ClientState { get; private set; } = null!;
-    [PluginService] internal static IDataManager DataManager { get; private set; } = null!;
-    [PluginService] internal static IPluginLog Log { get; private set; } = null!;
 
     private const string CommandName = "/knockknock";
 #if DEBUG
@@ -42,8 +40,8 @@ public sealed unsafe class Plugin : IDalamudPlugin
     public Plugin(IDalamudPluginInterface dalamud)
     {
         // Dalamad Services section
-        PluginHandlers.Start(dalamud);
-        PluginHandlers.ContextMenu.OnMenuOpened += OnOpenMenu;
+        DalamudServices.Start(dalamud);
+        DalamudServices.ContextMenu.OnMenuOpened += OnOpenMenu;
 
         Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
 
@@ -81,7 +79,7 @@ public sealed unsafe class Plugin : IDalamudPlugin
         // Add a simple message to the log with level set to information
         // Use /xllog to open the log window in-game
         // Example Output: 00:57:54.959 | INF | [SamplePlugin] ===A cool log message from Sample Plugin===
-        Log.Information($"===A cool log message from {PluginInterface.Manifest.Name}===");
+        DalamudServices.Log.Information($"===A cool log message from {PluginInterface.Manifest.Name}===");
     }
 
 
@@ -108,11 +106,11 @@ public sealed unsafe class Plugin : IDalamudPlugin
         var AllowedContentIds = Configuration.StoredPlayers.Keys.ToList();
 
         // ???
-        PluginHandlers.PluginLog.Info($"AddonName: {args.AddonName}");
+        DalamudServices.Log.Info($"AddonName: {args.AddonName}");
         if (args.AddonName != null) return;
 
         // Filter for only players when right clicking on entities
-        IGameObject? target = PluginHandlers.TargetManager.Target;
+        IGameObject? target = DalamudServices.TargetManager.Target;
         if (target is not IPlayerCharacter pCharacter) return;
 
         // Locate entity data directly in memory, this is going underneath dalamud now, the name
