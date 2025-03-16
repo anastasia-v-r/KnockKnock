@@ -10,9 +10,9 @@ namespace SamplePlugin;
 public class PlayerDataStorageContainer
 {
     private string playerName;
-    private ushort playerHomeWorld;
+    private string playerHomeWorld;
     private bool isPlayerFriend;
-    public PlayerDataStorageContainer(string playerName, ushort playerHomeWorld, bool isFriend)
+    public PlayerDataStorageContainer(string playerName, string playerHomeWorld, bool isFriend)
     { 
         this.playerName = playerName;
         this.playerHomeWorld = playerHomeWorld;
@@ -23,7 +23,7 @@ public class PlayerDataStorageContainer
         get { return playerName; }
         set { playerName = value; }
     }
-    public ushort HomeWorld
+    public string HomeWorld
     { 
         get { return playerHomeWorld; } 
         set { playerHomeWorld = value; } 

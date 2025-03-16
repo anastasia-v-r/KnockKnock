@@ -148,7 +148,7 @@ public sealed unsafe class Plugin : IDalamudPlugin
                 OnClicked = (_) =>
                 {
                     Configuration.StoredPlayers.Add(characterContentId, 
-                        new PlayerDataStorageContainer(bChara->NameString, bChara->HomeWorld, bChara->IsFriend));
+                        new PlayerDataStorageContainer(bChara->NameString, SheetsWrapper.GetWorldFromId(bChara->HomeWorld), bChara->IsFriend));
                     Configuration.Save();
                 }
             });
