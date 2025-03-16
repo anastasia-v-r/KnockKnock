@@ -16,7 +16,7 @@ public class KnockListTab : ITab
     public KnockListTab(Plugin plugin)
     {
         Configuration = plugin.Configuration;
-        Name = "KnockListTab";
+        Name = "KnockList";
     }
 
     public void Dispose() { }

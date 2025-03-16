@@ -15,7 +15,7 @@ public class ConfigTab : ITab
     public ConfigTab(Plugin plugin)
     {
         Configuration = plugin.Configuration;
-        Name = "ConfigTab";
+        Name = "Settings";
     }
 
     public void Dispose() { }
@@ -39,6 +39,5 @@ public class ConfigTab : ITab
             }
             ImGui.EndTabItem();
         }
-        
     }
 }
