@@ -24,20 +24,13 @@ public class ConfigTab : ITab
     {
         if (ImGui.BeginTabItem(Name))
         {
+            // Toggle Whitelist
             var UseWhiteList = Configuration.UseWhitelist;
             if (ImGui.Checkbox("Use whitelist", ref UseWhiteList))
             {
                 Configuration.UseWhitelist = UseWhiteList;
                 Configuration.Save();
             }
-
-            var movable = Configuration.IsConfigWindowMovable;
-            if (ImGui.Checkbox("Movable Config Window", ref movable))
-            {
-                Configuration.IsConfigWindowMovable = movable;
-                Configuration.Save();
-            }
-            ImGui.EndTabItem();
         }
     }
 }
