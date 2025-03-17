@@ -6,8 +6,8 @@ using System.Collections.Generic;
 
 namespace SamplePlugin;
 
-[Serializable] 
-public class PlayerDataStorageContainer
+// Custom container for storing necesarry player data locally
+[Serializable] public class PlayerDataStorageContainer
 {
     private string playerName;
     private string playerHomeWorld;
@@ -34,8 +34,9 @@ public class PlayerDataStorageContainer
         set { isPlayerFriend = value; }
     }
 }
-[Serializable]
-public class Configuration : IPluginConfiguration
+
+// Create store for plugin data such as settings choices and other data
+[Serializable] public class Configuration : IPluginConfiguration
 {
     public int Version { get; set; } = 0;
 
@@ -43,6 +44,7 @@ public class Configuration : IPluginConfiguration
     public bool IsConfigWindowMovable { get; set; } = true;
 
     public Dictionary<ulong, PlayerDataStorageContainer> StoredPlayers = new Dictionary<ulong, PlayerDataStorageContainer>();
+    
     // the below exist just to make saving less cumbersome
     public void Save()
     {
