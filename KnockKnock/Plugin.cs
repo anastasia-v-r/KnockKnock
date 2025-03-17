@@ -20,11 +20,13 @@ namespace SamplePlugin;
 
 public sealed unsafe class Plugin : IDalamudPlugin
 {
+    // Initialize various services for usage
     [PluginService] internal static IDalamudPluginInterface PluginInterface { get; private set; } = null!;
     [PluginService] internal static ITextureProvider TextureProvider { get; private set; } = null!;
     [PluginService] internal static ICommandManager CommandManager { get; private set; } = null!;
     [PluginService] internal static IClientState ClientState { get; private set; } = null!;
 
+    // Setup command strings for later assignment
     private const string CommandName = "/knockknock";
 #if DEBUG
     private const string DevCommandName = "/kkd";
@@ -51,6 +53,7 @@ public sealed unsafe class Plugin : IDalamudPlugin
 
         WindowSystem.AddWindow(MainWindow);
 
+        // Add commands to handler so dalamud knows to open this plogon when the appropriate string is seen in the chat window
         CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
         {
             HelpMessage = "A useful message to display in /xlhelp"
@@ -62,6 +65,7 @@ public sealed unsafe class Plugin : IDalamudPlugin
             HelpMessage = "A useful message to display in /xlhelp"
         });
 #endif
+
         PluginInterface.UiBuilder.Draw += DrawUI;
 
         // Adds another button that is doing the same but for the main ui of the plugin
@@ -73,7 +77,7 @@ public sealed unsafe class Plugin : IDalamudPlugin
         DalamudServices.Log.Information($"===A cool log message from {PluginInterface.Manifest.Name}===");
     }
 
-
+    // Cleanup objects
     public void Dispose()
     {
         WindowSystem.RemoveAllWindows();
@@ -92,7 +96,7 @@ public sealed unsafe class Plugin : IDalamudPlugin
     private void OnOpenMenu(IMenuOpenedArgs args)
     {
         // Store local copy of White list for ez access and speed
-        var AllowedContentIds = Configuration.StoredPlayers.Keys.ToList();
+        var AllowedContentIds = Configuration.StoredPlayers.Keys.ToList(    );
 
         // ???
         DalamudServices.Log.Info($"AddonName: {args.AddonName}");
